@@ -1,15 +1,22 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
+import TextField from "@mui/material/TextField";
+
 import Web3Modal from "web3modal";
-import { providers, Contract } from "ethers";
+import { providers } from "ethers";
 import { useEffect, useState, useRef } from "react";
 
 export default function Home() {
-  const [walletConnected, setWalletConnected] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
+  // Crypto State
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [address, setAddress] = useState("");
   const web3ModalRef = useRef();
+
+  // Input State
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
 
   /**
    * Returns a Provider or Signer object representing the Ethereum RPC with or without the
@@ -42,13 +49,27 @@ export default function Home() {
   */
   const connectWallet = async () => {
     try {
-      // Get the provider from web3Modal, which in our case is MetaMask
+      // Get the signer from web3Modal, which in our case is MetaMask
       // When used for the first time, it prompts the user to connect their wallet
-      await getProviderOrSigner();
+      const signer = await getProviderOrSigner(true);
+      const address = await signer.getAddress();
       setWalletConnected(true);
+      setAddress(address);
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.value);
   };
 
   useEffect(() => {
@@ -66,7 +87,7 @@ export default function Home() {
   }, [walletConnected]);
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Create your experience NFT</title>
         <meta
@@ -76,8 +97,29 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>Your experience NFT</h1>
+      <main>
+        <h1>Your experience NFT: {address}</h1>
+        <TextField
+          required
+          id="name"
+          label="Name"
+          value={name}
+          onChange={handleNameChange}
+        />
+        <TextField
+          required
+          id="description"
+          label="Description"
+          value={description}
+          onChange={handleDescriptionChange}
+        />
+        <TextField
+          required
+          id="image"
+          label="Image"
+          value={image}
+          onChange={handleImageChange}
+        />
       </main>
     </div>
   );
