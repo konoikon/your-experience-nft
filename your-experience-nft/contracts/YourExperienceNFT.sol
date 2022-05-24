@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "hardhat/console.sol";
 
 import {Base64} from "../libraries/Base64.sol";
 
@@ -42,10 +41,6 @@ contract YourExperienceNFT is ERC721URIStorage, Ownable {
     string memory finalTokenUri = string(
       abi.encodePacked("data:application/json;base64,", json)
     );
-
-    console.log("\n--------------------");
-    console.log(finalTokenUri);
-    console.log("--------------------\n");
 
     _safeMint(msg.sender, newItemId);
 
